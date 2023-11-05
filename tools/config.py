@@ -96,6 +96,6 @@ scale_config = dict(s12=10,s23=5,s34=9,s56=9,s67=5,s78=3)
 #h, w, roil_x, roil_y, roir_x, roir_y,s
 roi_config = dict(
     group_1 = np.array([1960,5460,4180,8220,0,8220,10]),
-    group_2 = np.array([1270,4700,3200,800,450,800,5]),
-    group_3 = np.array([1700,4620,18880,4440,13900,4440,9]),
+    group_2 = np.array([1280,4800,3200,800,450,800,5]),
+    group_3 = np.array([1800,4620,18880,4440,13900,4440,9]),
 )
