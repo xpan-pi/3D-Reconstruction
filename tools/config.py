@@ -96,6 +96,17 @@ scale_config = dict(s12=10,s23=5,s34=9,s56=9,s67=5,s78=3)
 #h, w, roil_x, roil_y, roir_x, roir_y,s
 roi_config = dict(
     group_1 = np.array([1960,5460,4180,8220,0,8220,10]),
-    group_2 = np.array([1280,4800,3200,800,450,800,5]),
+    # group_2 = np.array([1280,4800,3200,800,450,800,5]),
+    group_2_r = np.array([1500,2500,5500,670,2700,650,5]), #右边工件
+    group_2_l = np.array([1200,2000,3200,570,660,600,5]), #第二组图片中每张图片的左边那个工件
+    # group_2 = np.array([1200,4800,3240,955,300,950,5]),
     group_3 = np.array([1800,4620,18880,4440,13900,4440,9]),
+    # group_3 = np.array([1800,4620,18880,4440,13900,4440,10]),
+)
+
+size_config = dict(
+    group1_size = '196x546',
+    group2_r_size = '3000x800',  #右边的工件 还有问题
+    group2_l_size = '1100x1000', #左边工件
+    group3_size = '450x1155'
 )
