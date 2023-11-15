@@ -18,7 +18,11 @@ def s_rectification(images):
     for i in range(0,3):
         left = i+2
         right = i+1
-        s = roi_config['group_{}'.format(i+1)][6]
+        if i == 1:
+            s = roi_config['group_{}_l'.format(i+1)][6]
+            # s = 10
+        else:
+            s = roi_config['group_{}'.format(i+1)][6]
 
         left_camera_matrix = in_config['s{}_camera_matrix'.format(left)]
         left_distortion = in_config['s{}_distortion'.format(left)]
@@ -59,18 +63,48 @@ def s_rectification(images):
         left = cv2.remap(img_left, left_map1, left_map2, cv2.INTER_LINEAR)
         right = cv2.remap(img_right, right_map1, right_map2, cv2.INTER_LINEAR)
 
-        roi_h = roi_config['group_{}'.format(i+1)][0]
-        roi_w = roi_config['group_{}'.format(i+1)][1]
-        roil_x =roi_config['group_{}'.format(i+1)][2]
-        roil_y =roi_config['group_{}'.format(i+1)][3]
-        roir_x =roi_config['group_{}'.format(i+1)][4]
-        roir_y =roi_config['group_{}'.format(i+1)][5]
-        roi_l = left[roil_y:roil_y + roi_h, roil_x:roil_x + roi_w]
-        roi_r = right[roir_y:roir_y + roi_h, roir_x:roir_x + roi_w]
-        re_images.append(roi_l)
-        re_images.append(roi_r)
-        cv2.imwrite('imgs/group{}_l.jpg'.format(i+1),roi_l)
-        cv2.imwrite('imgs/group{}_r.jpg'.format(i+1),roi_r)
+        # 截取感兴趣区域
+        if i==1:
+            ### 第二组图片中靠左边的工件
+            roi_h_l = roi_config['group_2_l'][0]
+            roi_w_l = roi_config['group_2_l'][1]
+            roil_x_l = roi_config['group_2_l'][2]
+            roil_y_l = roi_config['group_2_l'][3]
+            roir_x_l = roi_config['group_2_l'][4]
+            roir_y_l = roi_config['group_2_l'][5]
+            roi_l_l = left[roil_y_l:roil_y_l+roi_h_l, roil_x_l:roil_x_l+roi_w_l]
+            roi_r_l = right[roir_y_l:roir_y_l+roi_h_l, roir_x_l:roir_x_l+roi_w_l]
+            re_images.append(roi_l_l)
+            re_images.append(roi_r_l)
+            cv2.imwrite('imgs/group_2_l_l.jpg',roi_l_l)
+            cv2.imwrite('imgs/group_2_r_l.jpg',roi_r_l)
+
+            roi_h_r = roi_config['group_2_r'][0]
+            roi_w_r = roi_config['group_2_r'][1]
+            roil_x_r = roi_config['group_2_r'][2]
+            roil_y_r = roi_config['group_2_r'][3]
+            roir_x_r = roi_config['group_2_r'][4]
+            roir_y_r = roi_config['group_2_r'][5]
+            roi_l_r = left[roil_y_r:roil_y_r+roi_h_r, roil_x_r:roil_x_r+roi_w_r]
+            roi_r_r = right[roir_y_r:roir_y_r+roi_h_r, roir_x_r:roir_x_r+roi_w_r]
+            re_images.append(roi_l_r)
+            re_images.append(roi_r_r)
+            cv2.imwrite('imgs/group_2_l_r.jpg',roi_l_r)
+            cv2.imwrite('imgs/group_2_r_r.jpg',roi_r_r)
+            
+        else:
+            roi_h = roi_config['group_{}'.format(i+1)][0]
+            roi_w = roi_config['group_{}'.format(i+1)][1]
+            roil_x =roi_config['group_{}'.format(i+1)][2]
+            roil_y =roi_config['group_{}'.format(i+1)][3]
+            roir_x =roi_config['group_{}'.format(i+1)][4]
+            roir_y =roi_config['group_{}'.format(i+1)][5]
+            roi_l = left[roil_y:roil_y + roi_h, roil_x:roil_x + roi_w]
+            roi_r = right[roir_y:roir_y + roi_h, roir_x:roir_x + roi_w]
+            re_images.append(roi_l)
+            re_images.append(roi_r)
+            cv2.imwrite('imgs/group{}_l.jpg'.format(i+1),roi_l)
+            cv2.imwrite('imgs/group{}_r.jpg'.format(i+1),roi_r)
     return re_images
 
 def main():
