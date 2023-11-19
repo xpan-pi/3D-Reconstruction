@@ -55,6 +55,11 @@ def s_rectification(images):
                                                                           right_camera_matrix, right_distortion, size,
                                                                           R,
                                                                           T, alpha=-1)
+        print('Q:',Q)
+        print('before:',T)
+        print('after:',np.matmul(R2,T))
+        print('R1:',R1,'\n')
+        
         left_map1, left_map2 = cv2.initUndistortRectifyMap(left_camera_matrix, left_distortion, R1, P1, size,
                                                            cv2.CV_16SC2)
         right_map1, right_map2 = cv2.initUndistortRectifyMap(right_camera_matrix, right_distortion, R2, P2, size,
