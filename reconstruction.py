@@ -1,5 +1,6 @@
 #reconstruction
 import open3d as o3d
+from tools.config import *
 
 #读取语义分割图像
 img = cv2.imread('/media/xpan/文档/Program/pycharm/3D-Reconstruction/imgs/group3_l_label.png')
