@@ -324,7 +324,7 @@ class Unet(object):
         image = Image.fromarray(np.uint8(pr))
         return image
 
-def main():
+def seg():
     unet = Unet()  #unet初始化
     if unet.mode == "predict":
         '''
@@ -379,4 +379,4 @@ def main():
         raise AssertionError("Please specify the correct mode: 'predict', 'video', 'fps' or 'dir_predict'.")
 
 if __name__ == "__main__":
-    main()
+    seg()
