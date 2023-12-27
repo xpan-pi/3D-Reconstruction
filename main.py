@@ -1,7 +1,11 @@
-import stereo_rectification
+import stereo
 import semantic_segmentation
+import locational
+import reconstruction
 
 if __name__ == '__main__':
-    stereo_rectification.main()
-    semantic_segmentation.main()
-
+    group = 6
+    stereo.stereo_rect(group)
+    # semantic_segmentation.seg()
+    locational.output_model(group)
+    reconstruction.main()
