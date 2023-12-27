@@ -219,7 +219,7 @@ def point2mesh(point_cloud):
     mesh.paint_uniform_color([0.7, 0.7, 0.7])
     return mesh
 
-if __name__ == '__main__':
+def main():
     # 参数说明
     # n_pts --> mesh采样的点数
     # ratio --> 点云缩放倍数
@@ -227,7 +227,6 @@ if __name__ == '__main__':
     # each_round --> 每圈点的个数
 
     # mesh = o3d.io.read_triangle_mesh('/media/xpan/文档/Program/pycharm/SoftRas-master/SoftRas-master/roi_3.obj')
-
 
     create_model()
 
@@ -251,5 +250,38 @@ if __name__ == '__main__':
     o3d.visualization.draw_geometries([point_cloud])
     o3d.visualization.draw_geometries([point_last_cloud])
     #     o3d.io.write_point_cloud('E:/Program/pycharm/SoftRas-master/SoftRas-master/result.ply', point_last_cloud)
-
     o3d.visualization.draw_geometries([mesh], mesh_show_back_face=True)
+
+if __name__ == '__main__':
+    # # 参数说明
+    # # n_pts --> mesh采样的点数
+    # # ratio --> 点云缩放倍数
+    # # num_round --> 点云切割份数
+    # # each_round --> 每圈点的个数
+
+    # # mesh = o3d.io.read_triangle_mesh('/media/xpan/文档/Program/pycharm/SoftRas-master/SoftRas-master/roi_3.obj')
+
+    # create_model()
+
+    # mesh = o3d.io.read_triangle_mesh('/home/xpan/Desktop/program/SoftRas-master/big_obj.obj')
+    # mesh.compute_vertex_normals()
+
+    # n_pts = 10000
+    # ratio = 5
+    # pcd = create_points(mesh, n_pts, ratio) 
+
+
+    # num_round = 50
+    # each_round = 100
+    # point_cloud = create_z_fit_points(pcd, num_round, each_round)
+
+    # point_last_cloud = create_last_points(point_cloud, each_round)
+
+    # mesh = point2mesh(point_last_cloud)
+
+    # o3d.visualization.draw_geometries([pcd])
+    # o3d.visualization.draw_geometries([point_cloud])
+    # o3d.visualization.draw_geometries([point_last_cloud])
+    # #     o3d.io.write_point_cloud('E:/Program/pycharm/SoftRas-master/SoftRas-master/result.ply', point_last_cloud)
+    # o3d.visualization.draw_geometries([mesh], mesh_show_back_face=True)
+    main()
