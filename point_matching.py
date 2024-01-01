@@ -21,44 +21,43 @@ def rotateToQuaternion(rotateMatrix):
     print(f"x: {q.x}, y: {q.y}, z: {q.z}, w: {q.w}")
     return q
 
-source_pcd = o3d.io.read_point_cloud('./5_chuli.ply')
-voxel_size = 0.1
-source_pcd_points = downsample_point_cloud(source_pcd.points, voxel_size)
-source_pcd = o3d.geometry.PointCloud()
-source_pcd.points = o3d.utility.Vector3dVector(source_pcd_points)
-print("source_pcd:",len(source_pcd.points))
+# source_pcd = o3d.io.read_point_cloud('./result.ply')
+# voxel_size = 0.1
+# source_pcd_points = downsample_point_cloud(source_pcd.points, voxel_size)
+# source_pcd = o3d.geometry.PointCloud()
+# source_pcd.points = o3d.utility.Vector3dVector(source_pcd_points)
+# print("source_pcd:",len(source_pcd.points))
 
-target_pcd = o3d.io.read_point_cloud('./67new_cloud.ply')
-target_pcd_points = downsample_point_cloud(target_pcd.points, voxel_size)
-target_pcd = o3d.geometry.PointCloud()
-target_pcd.points = o3d.utility.Vector3dVector(target_pcd_points)
-print("target_pcd:",len(target_pcd.points))
+# target_pcd = o3d.io.read_point_cloud('./67new_cloud.pcd')
+# target_pcd_points = downsample_point_cloud(target_pcd.points, voxel_size)
+# target_pcd = o3d.geometry.PointCloud()
+# target_pcd.points = o3d.utility.Vector3dVector(target_pcd_points)
+# print("target_pcd:",len(target_pcd.points))
 
+# coord_frame2 = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.6, origin=[0,0,0]) #Tag标签的模型 暂时以（0 0 0）为参考坐标系原点
+# o3d.visualization.draw_geometries([source_pcd, target_pcd,coord_frame2])
 
-coord_frame2 = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.6, origin=[0,0,0]) #Tag标签的模型 暂时以（0 0 0）为参考坐标系原点
-o3d.visualization.draw_geometries([source_pcd, target_pcd,coord_frame2])
+# angle = np.pi / 2  # 弧度制，相当于90度
+# R2 = np.array([[np.cos(angle), 0, np.sin(angle)],
+#               [0, 1, 0],
+#               [-np.sin(angle), 0, np.cos(angle)]]) #y
 
-angle = np.pi / 2  # 弧度制，相当于90度
-R2 = np.array([[np.cos(angle), 0, np.sin(angle)],
-              [0, 1, 0],
-              [-np.sin(angle), 0, np.cos(angle)]]) #y
+# w1 = source_pcd.get_axis_aligned_bounding_box()
+# w1.color = (1,0,0)
+# extent1=w1.get_extent()
+# length1,width1,height1 = extent1[2],extent1[1],extent1[0] 
 
-w1 = source_pcd.get_axis_aligned_bounding_box()
-w1.color = (1,0,0)
-extent1=w1.get_extent()
-length1,width1,height1 = extent1[2],extent1[1],extent1[0] 
+# t = np.mean(target_pcd.points, axis=0) - np.mean(source_pcd.points, axis=0)+[0,(width1)/2,0]
+# T = np.identity(4)
+# T[:3, :3] = R2
+# T[:3, 3] = t
+# trans_point = apply_transformation(np.array(source_pcd.points),T)
 
-t = np.mean(target_pcd.points, axis=0) - np.mean(source_pcd.points, axis=0)+[0,(width1)/2,0]
-T = np.identity(4)
-T[:3, :3] = R2
-T[:3, 3] = t
-trans_point = apply_transformation(np.array(source_pcd.points),T)
+# source_pcd = o3d.geometry.PointCloud()
+# source_pcd.points = o3d.utility.Vector3dVector(trans_point)
 
-source_pcd = o3d.geometry.PointCloud()
-source_pcd.points = o3d.utility.Vector3dVector(trans_point)
-
-T1 = T
-o3d.visualization.draw_geometries([source_pcd, target_pcd,coord_frame2])
+# T1 = T
+# o3d.visualization.draw_geometries([source_pcd, target_pcd,coord_frame2])
 
 ########################基于点-面的精匹配
 ##点面匹配
@@ -161,7 +160,8 @@ def icp_point_to_plane_lm(source_points,source_pcd,target_pcd,target_normals,ini
     print("mean_distance:",abs(mean_distance))
     if abs(mean_distance) < 0.1:  
         return after_pcd,T
-    icp_point_to_plane_lm(source_points,source_pcd,target_pcd,target_normals,initial,loop)
+    # icp_point_to_plane_lm(source_points,source_pcd,target_pcd,target_normals,initial,loop)
+    return icp_point_to_plane_lm(source_points,source_pcd,target_pcd,target_normals,initial,loop)
 
 def downsample_point_cloud(point_cloud, voxel_size):
     pcd = o3d.geometry.PointCloud()
@@ -187,23 +187,75 @@ def euler2rot(euler):
     rotation_matrix = r.as_matrix()
     return rotation_matrix
 
-target_normals = calculate_normals(target_pcd)
+# target_normals = calculate_normals(target_pcd)
+# source_points = read_file_original(source_pcd)
+# dest_points_et_normal = read_file_deformed(target_pcd,target_normals)
+# initial = np.array([[0.01], [0.05], [0.01], [0.001], [0.001], [0.001]])
+# trans_pcd,T2 = icp_point_to_plane_lm(source_points,source_pcd,target_pcd,target_normals ,initial,0)
+# fianl_T = np.dot(T2,T1)
+# target_k = target_pcd.get_axis_aligned_bounding_box()
+# target_k.color = (1, 0, 0)
+# print("工件坐标为：",fianl_T[0:3,3])
+# trans_k = trans_pcd.get_axis_aligned_bounding_box()
+# trans_k.color = (0, 1, 0)
+# o3d.visualization.draw_geometries([target_pcd,trans_pcd,coord_frame2,target_k,trans_k])
+# siyuanshu = rotateToQuaternion(fianl_T[:3, :3])
+# print("siyuanshu:",siyuanshu)
 
-source_points = read_file_original(source_pcd)
-dest_points_et_normal = read_file_deformed(target_pcd,target_normals)
+def main():
+    source_pcd = o3d.io.read_point_cloud('./result.ply')
+    voxel_size = 0.1
+    source_pcd_points = downsample_point_cloud(source_pcd.points, voxel_size)
+    source_pcd = o3d.geometry.PointCloud()
+    source_pcd.points = o3d.utility.Vector3dVector(source_pcd_points)
+    print("source_pcd:",len(source_pcd.points))
 
-initial = np.array([[0.01], [0.05], [0.01], [0.001], [0.001], [0.001]])
+    target_pcd = o3d.io.read_point_cloud('./67new_cloud.pcd')
+    target_pcd_points = downsample_point_cloud(target_pcd.points, voxel_size)
+    target_pcd = o3d.geometry.PointCloud()
+    target_pcd.points = o3d.utility.Vector3dVector(target_pcd_points)
+    print("target_pcd:",len(target_pcd.points))
 
-trans_pcd,T2 = icp_point_to_plane_lm(source_points,source_pcd,target_pcd,target_normals ,initial,0)
-fianl_T = np.dot(T2,T1)
-target_k = target_pcd.get_axis_aligned_bounding_box()
-target_k.color = (1, 0, 0)
-print("工件坐标为：",fianl_T[0:3,3])
-trans_k = trans_pcd.get_axis_aligned_bounding_box()
-trans_k.color = (0, 1, 0)
-o3d.visualization.draw_geometries([target_pcd,trans_pcd,coord_frame2,target_k,trans_k])
-siyuanshu = rotateToQuaternion(fianl_T[:3, :3])
-print("siyuanshu:",siyuanshu)
+    coord_frame2 = o3d.geometry.TriangleMesh.create_coordinate_frame(size=0.6, origin=[0,0,0]) #Tag标签的模型 暂时以（0 0 0）为参考坐标系原点
+    o3d.visualization.draw_geometries([source_pcd, target_pcd,coord_frame2])
 
+    angle = np.pi / 2  # 弧度制，相当于90度
+    R2 = np.array([[np.cos(angle), 0, np.sin(angle)],
+                [0, 1, 0],
+                [-np.sin(angle), 0, np.cos(angle)]]) #y
 
+    w1 = source_pcd.get_axis_aligned_bounding_box()
+    w1.color = (1,0,0)
+    extent1=w1.get_extent()
+    length1,width1,height1 = extent1[2],extent1[1],extent1[0] 
 
+    t = np.mean(target_pcd.points, axis=0) - np.mean(source_pcd.points, axis=0)+[0,(width1)/2,0]
+    T = np.identity(4)
+    T[:3, :3] = R2
+    T[:3, 3] = t
+    trans_point = apply_transformation(np.array(source_pcd.points),T)
+
+    source_pcd = o3d.geometry.PointCloud()
+    source_pcd.points = o3d.utility.Vector3dVector(trans_point)
+
+    T1 = T
+    o3d.visualization.draw_geometries([source_pcd, target_pcd,coord_frame2])
+
+    target_normals = calculate_normals(target_pcd)
+    source_points = read_file_original(source_pcd)
+    dest_points_et_normal = read_file_deformed(target_pcd,target_normals)
+    initial = np.array([[0.01], [0.05], [0.01], [0.001], [0.001], [0.001]])
+    trans_pcd,T2 = icp_point_to_plane_lm(source_points,source_pcd,target_pcd,target_normals ,initial,0)
+    fianl_T = np.dot(T2,T1)
+    target_k = target_pcd.get_axis_aligned_bounding_box()
+    target_k.color = (1, 0, 0)
+    print("工件坐标为：",fianl_T[0:3,3])
+    trans_k = trans_pcd.get_axis_aligned_bounding_box()
+    trans_k.color = (0, 1, 0)
+    o3d.visualization.draw_geometries([target_pcd,trans_pcd,coord_frame2,target_k,trans_k])
+    print(fianl_T[:3, :3])
+    siyuanshu = rotateToQuaternion(fianl_T[:3, :3])
+    print("siyuanshu:",siyuanshu)
+
+if __name__ == '__main__':
+    main()
