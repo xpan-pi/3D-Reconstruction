@@ -6,70 +6,71 @@ from scipy.optimize import least_squares
 import argparse
 import os
 import sys
-sys.path.append('/home/xpan/Desktop/program/SoftRas-master/examples/recon')
-
+sys.path.append('/home/ecust/SoftRas-master/examples/recon')
 import imageio
 import torch
 import tqdm
 
-import soft_renderer.functional as srf
-try:
-    from softras import models, models_large
-    from softras.utils import img_cvt
-except ImportError:
-    import models, models_large
-    from utils import img_cvt
+# import soft_renderer.functional as srf
+# try:
+#     from softras import models, models_large
+#     from softras.util import img_cvt
+# except ImportError:
+#     import models, models_large
+#     from util import img_cvt
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-s', '--softras-dir', type=str, default='/home/xpan/Desktop/program/SoftRas-master')
-parser.add_argument('-d', '--model-path', type=str, default='/home/xpan/Desktop/program/SoftRas-master/data/results/models/record_64_1500/checkpoint_0010000.pth.tar')
-parser.add_argument('-is', '--image-size', type=int, default=64)
-parser.add_argument('-sv', '--sigma-val', type=float, default=0.01)
-parser.add_argument('--shading-model', action='store_true', help='test shading model')
-parser.add_argument('-img', '--image-path', type=str, default='/home/xpan/Desktop/program/SoftRas-master/big_obj.png')
-args = parser.parse_args(args=[])
-print(f'load: {args.model_path}')
-obj_path=f'{args.softras_dir}/data/obj/sphere/sphere_642.obj'
-if args.shading_model:
-    model = models_large.Model(obj_path, args=args)
-else:
-    model = models.Model(obj_path, args=args)
 
-model = model.cuda()
-state_dicts = torch.load(args.model_path)
+# parser = argparse.ArgumentParser()
+# parser.add_argument('-s', '--softras-dir', type=str, default='/home/ecust/SoftRas-master')
+# parser.add_argument('-d', '--model-path', type=str, default='./checkpoint_0010000.pth.tar')
+# parser.add_argument('-is', '--image-size', type=int, default=64)
+# parser.add_argument('-sv', '--sigma-val', type=float, default=0.01)
+# parser.add_argument('--shading-model', action='store_true', help='test shading model')
+# parser.add_argument('-img', '--image-path', type=str, default='./big_obj.png')
+# args = parser.parse_args(args=[])
 
-model.load_state_dict(state_dicts['model'], strict=False)
-model.eval()
+# print(f'load: {args.model_path}')
+# obj_path=f'{args.softras_dir}/data/obj/sphere/sphere_642.obj'
+# # print(args.shading_model) #False
+# # if args.shading_model:
+# #     model = models_large.Model(obj_path, args=args)
+# # else:
+# #     model = models.Model(obj_path, args=args)
+# model = models.Model(obj_path, args=args)
+# model = model.cuda()
+# state_dicts = torch.load(args.model_path)
+# model.load_state_dict(state_dicts['model'], strict=False)
+# model.eval()
 
-def mesh_recon(x):
-    if x.ndim == 4:
-        pass
-    elif x.ndim == 3:
-        x = x[np.newaxis, :]
-    else:
-        raise ValueError('X must be 3/4 dims: CHW/BCHW.')
+# def mesh_recon(x):
+#     if x.ndim == 4:
+#         pass
+#     elif x.ndim == 3:
+#         x = x[np.newaxis, :]
+#     else:
+#         raise ValueError('X must be 3/4 dims: CHW/BCHW.')
 
-    assert x.shape[1] == 4, 'C must be 4: rgba.'
-    # print(f'  {x.shape}')
+#     assert x.shape[1] == 4, 'C must be 4: rgba.'
+#     # print(f'  {x.shape}')
 
-    x = np.ascontiguousarray(x)
-    x = x.astype('float32') / 255.
-    x = torch.autograd.Variable(torch.from_numpy(x)).cuda()
-    _, vertices, faces = model(x, task='test')
+#     x = np.ascontiguousarray(x)
+#     x = x.astype('float32') / 255.
+#     x = torch.autograd.Variable(torch.from_numpy(x)).cuda()
+#     _, vertices, faces = model(x, task='test')
 
-    return x, vertices, faces
+#     return x, vertices, faces
 
-def create_model():
-    if args.image_path and os.path.exists(args.image_path):
-        print(f'read: {args.image_path}')
-        image = imageio.imread(args.image_path)
-        x = image.transpose(2, 0, 1) # HWC > CHW
+# def create_model():
+#     if args.image_path and os.path.exists(args.image_path):
+#         print(f'read: {args.image_path}')
+#         image = imageio.imread(args.image_path)
+#         x = image.transpose(2, 0, 1) # HWC > CHW
 
-        _, vertices, faces = mesh_recon(x)
+#         _, vertices, faces = mesh_recon(x)
 
-        obj_path = os.path.splitext(args.image_path)[0] + '.obj'
-        print(f'save: {obj_path}')
-        srf.save_obj(obj_path, vertices[0], faces[0])
+#         obj_path = os.path.splitext(args.image_path)[0] + '.obj'
+#         print(f'save: {obj_path}')
+#         srf.save_obj(obj_path, vertices[0], faces[0])
 
 def ellipse_residuals(params, x, y):
     # 椭圆方程参数
@@ -228,9 +229,9 @@ def main():
 
     # mesh = o3d.io.read_triangle_mesh('/media/xpan/文档/Program/pycharm/SoftRas-master/SoftRas-master/roi_3.obj')
 
-    create_model()
+    # create_model()
 
-    mesh = o3d.io.read_triangle_mesh('/home/xpan/Desktop/program/SoftRas-master/big_obj.obj')
+    mesh = o3d.io.read_triangle_mesh('./big_obj.obj')
     mesh.compute_vertex_normals()
 
     n_pts = 10000
@@ -246,11 +247,13 @@ def main():
 
     mesh = point2mesh(point_last_cloud)
 
-    o3d.visualization.draw_geometries([pcd])
-    o3d.visualization.draw_geometries([point_cloud])
-    o3d.visualization.draw_geometries([point_last_cloud])
-    #     o3d.io.write_point_cloud('E:/Program/pycharm/SoftRas-master/SoftRas-master/result.ply', point_last_cloud)
-    o3d.visualization.draw_geometries([mesh], mesh_show_back_face=True)
+    # o3d.visualization.draw_geometries([pcd])
+    # o3d.visualization.draw_geometries([point_cloud])
+    # o3d.visualization.draw_geometries([point_last_cloud])
+    o3d.io.write_point_cloud('./result.pcd', point_last_cloud)
+    # o3d.visualization.draw_geometries([mesh], mesh_show_back_face=True)
+    o3d.io.write_triangle_mesh('/home/ecust/dist/model/big_obj.obj',mesh)
+    print('reconstruction is done!')
 
 if __name__ == '__main__':
     # # 参数说明
