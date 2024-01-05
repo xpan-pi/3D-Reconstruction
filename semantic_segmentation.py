@@ -370,13 +370,14 @@ def seg():
                 if not os.path.exists(unet.dir_save_path):
                     os.makedirs(unet.dir_save_path)
                 r_image.save(os.path.join(unet.dir_save_path, file))
-                r_image.show()
+                # r_image.show()
                 # iamge_arr = np.array(r_image)
                 # cv2.imshow(file, iamge_arr,)
                 # cv2.waitKey(0)
                 # cv2.destroyAllWindows()           
     else:
         raise AssertionError("Please specify the correct mode: 'predict', 'video', 'fps' or 'dir_predict'.")
+    print('seg is done!')
 
 if __name__ == "__main__":
     seg()
