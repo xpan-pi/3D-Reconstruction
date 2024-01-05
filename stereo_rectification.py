@@ -71,6 +71,7 @@ def stereo_rect(group):
 
     cv2.imwrite('./imgs/group{}_l.jpg'.format(group),roi_l)
     cv2.imwrite('./imgs/group{}_r.jpg'.format(group),roi_r)
+    print('stereo rectification is done!')
     return 0
 
 if __name__ == '__main__':
